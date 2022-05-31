@@ -1,0 +1,111 @@
+.articleListWrap {
+  position: relative;
+  top: 20px;
+  width: 0;
+  visibility: hidden;
+  opacity: 0;
+  transition: all 1s;
+}
+
+.articleEditWrap {
+  position: relative;
+  top: 20px;
+  width: 0;
+  visibility: hidden;
+  opacity: 0;
+  transition: all 1s;
+}
+
+.active {
+  top: 0;
+  width: auto;
+  visibility: visible;
+  opacity: 1;
+}
+
+.detailContent {
+  .detailTitle {
+    font-size: 24px;
+  }
+  .detailImg {
+    width: 100%;
+  }
+  .detailAbstract {
+    font-size: 16px;
+  }
+}
+
+.featureTag {
+  height: 26px;
+  color: #777;
+  font-weight: 550;
+  font-size: 16px;
+}
+
+.EditWrap {
+  :global {
+    .ant-card-extra {
+      display: flex;
+      align-items: center;
+    }
+    .ant-descriptions-item-container {
+      align-items: center;
+      min-height: 40px;
+    }
+  }
+
+  .manulIcon {
+    font-size: 16px;
+    &:hover {
+      color: #13c2c2;
+    }
+  }
+
+  .uploadCover {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 75px;
+    height: 75px;
+    background-color: #ddd;
+    cursor: pointer;
+    opacity: 0.3;
+
+    &:hover {
+      box-shadow: 0 2px 2px #eee;
+      opacity: 0.5;
+    }
+  }
+
+  .coverWrap {
+    position: relative;
+    overflow: hidden;
+    border-radius: 6px;
+    box-shadow: 0 2px 2px;
+
+    .coverImg {
+      max-width: 400px;
+    }
+
+    .mask {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(100, 100, 100, 0.3);
+      .delete {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        color: rgb(100, 100, 100);
+        font-size: 32px;
+        transform: translate(-50%, -50%);
+        cursor: pointer;
+        &:hover {
+          color: #000;
+        }
+      }
+    }
+  }
+}
