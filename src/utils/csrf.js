@@ -16,7 +16,6 @@ export function getCSRF() {
   if (csrf) {
     return csrf;
   } else {
-    queryCSRF();
     return null;
   }
 }
