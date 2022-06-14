@@ -16,6 +16,9 @@ const loginOut = async () => {
   const { redirect } = query; // Note: There may be security issues, please note
 
   if (window.location.pathname !== '/user/login' && !redirect) {
+    // 清除token
+    window.localStorage.removeItem('qingyun-token');
+    // 跳转登录页
     history.replace({
       pathname: '/user/login',
       search: stringify({
@@ -23,6 +26,8 @@ const loginOut = async () => {
       }),
     });
   }
+
+  // todo 告诉后端应该清除同步缓存中的用户相关缓存
 };
 
 const AvatarDropdown = ({ menu }) => {

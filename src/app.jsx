@@ -7,14 +7,31 @@ import { currentUser as queryCurrentUser } from './services/ant-design-pro/api';
 import { BookOutlined, LinkOutlined } from '@ant-design/icons';
 import defaultSettings from '../config/defaultSettings';
 import axios from 'axios';
-import { queryCSRF, getCSRF } from '@/utils/csrf';
 import Cookies from 'react-cookies';
 
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 
-/** 获取用户信息比较慢的时候会展示一个 loading */
+//https://zhuanlan.zhihu.com/p/136035219
+// 请求拦截器
+axios.interceptors.request.use((req) => {
+  /** 设置全局默认header **/
+  req.headers['x-csrf-token'] = Cookies.load('csrfToken');
+  req.headers['Authorization'] = 'Bearer ' + window.localStorage.getItem('qingyun-token');
+  return req;
+});
 
+// 响应拦截器
+axios.interceptors.response.use((res) => {
+  console.log(res);
+  console.log(res?.request?.responseURL);
+  if (res?.request?.responseURL?.includes('/user/login')) {
+    history.push(loginPath);
+  }
+  return res;
+});
+
+/** 获取用户信息比较慢的时候会展示一个 loading */
 export const initialStateConfig = {
   loading: <PageLoading />,
 };
@@ -25,18 +42,7 @@ export const initialStateConfig = {
 export async function getInitialState() {
   const fetchUserInfo = async () => {
     try {
-      if (!getCSRF()) throw new Error('无法获取csrf');
-
-      let token = Cookies.load('qingyun-token');
-      if (!token) throw new Error('无效token');
-
-      const { data: res } = await axios.get('/api/user/info', {
-        headers: {
-          'x-csrf-token': window.localStorage.getItem('x-csrf-token'),
-          Authorization: 'Bearer ' + token,
-        },
-      });
-      console.log(res);
+      const { data: res } = await axios.get('/api/user/info');
       return res.data;
     } catch (error) {
       console.error(error);
@@ -45,20 +51,6 @@ export async function getInitialState() {
 
     return undefined;
   };
-
-  // EGG使用了csrf安全机制,首先要获取到csrf
-  const csrf = await queryCSRF();
-  if (!csrf) {
-    console.error('csrf获取失败');
-  }
-
-  // const csrfTimer = setInterval(async () => {
-  //   const csrf = await queryCSRF().catch((err) => {
-  //     console.error(err);
-  //   });
-
-  //   if (csrf) clearInterval(csrfTimer);
-  // }, 5000);
 
   // 如果不是登录页面，执行
   if (history.location.pathname !== loginPath) {

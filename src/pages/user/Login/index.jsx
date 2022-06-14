@@ -44,12 +44,8 @@ const Login = () => {
 
   // 登录请求
   const login = async (body) => {
-    body.password = md5(body.password);
-    const { data: res } = await axios.post('/api/user/login', body, {
-      headers: {
-        'x-csrf-token': window.localStorage.getItem('x-csrf-token'),
-      },
-    });
+    body.password = md5(body.password); // 把密码进行编码
+    const { data: res } = await axios.post('/api/user/login', body);
 
     return res;
   };
@@ -58,13 +54,14 @@ const Login = () => {
     try {
       // 登录
       const res = await login({ ...values, loginType });
-      console.log(res);
 
       if (res.success) {
         const defaultLoginSuccessMessage = intl.formatMessage({
           id: 'pages.login.success',
           defaultMessage: '登录成功！',
         });
+        // 把token保存在localStorage中
+        window.localStorage.setItem('qingyun-token', res.data);
         message.success(defaultLoginSuccessMessage);
 
         await fetchUserInfo();
