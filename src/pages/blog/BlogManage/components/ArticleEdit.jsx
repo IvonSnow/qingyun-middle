@@ -88,7 +88,7 @@ export default function ArticleEdit({ mode, data, backList }) {
     if (mode === 'edit') {
       setTitle(data.title);
       setAbstract(data.abstract);
-      setLabels(data.labels ? data.labels.split(',') : []);
+      setLabels(data.labels);
       setCover(data.cover_url);
       setMdContent(data.content_md);
       setHtmlContent(data.content_html);
@@ -104,7 +104,8 @@ export default function ArticleEdit({ mode, data, backList }) {
 
   // 提交文章
   const handlePostArticle = () => {
-    if (title && abstract && labels && cover && mdContent && htmlContent) {
+    debugger;
+    if (title && abstract && labels.length && cover && mdContent && htmlContent) {
       Modal.confirm({
         title: '确定保存当前文章?',
         icon: null,

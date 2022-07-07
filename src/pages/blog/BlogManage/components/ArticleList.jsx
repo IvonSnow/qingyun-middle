@@ -24,7 +24,17 @@ const DescriptionItem = Descriptions.Item;
 // 获取文章列表数据
 const queryArticlesList = async () => {
   const { data: res } = await axios.get('/api/blog/articles/list');
-  return res;
+
+  let list = [];
+  if (res.success && isArray(res.data)) {
+    list = res.data;
+    list.forEach((article) => {
+      article.labels = article.labels ? article.labels.split(',') : [];
+    });
+  } else {
+    message.error(res.message);
+  }
+  return list;
 };
 
 /*
@@ -155,8 +165,9 @@ export default function ArticleList({ toEdit, toAdd }) {
           <img className={styles.detailImg} alt={current.title} src={current.cover_url} />
         </DescriptionItem>
         <DescriptionItem label={'标签'} span={2} className={styles.detailAbstract}>
-          {isArray(current.feature) &&
-            current.feature.map((item) => (
+          {console.log(current)}
+          {isArray(current.labels) &&
+            current.labels.map((item) => (
               <Tag className={styles.featureTag} key={item}>
                 {item}
               </Tag>
