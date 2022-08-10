@@ -97,7 +97,6 @@ export default function ArticleEdit({ mode, data, backList }) {
 
   //md编辑时响应函数
   const handleEditorChange = ({ html, text }) => {
-    console.log('handleEditorChange', html, text);
     setMdContent(text);
     setHtmlContent(html);
   };
@@ -163,9 +162,6 @@ export default function ArticleEdit({ mode, data, backList }) {
   };
 
   const beforeUploadMd = (file, fileList) => {
-    console.log(file);
-    console.log(fileList);
-
     const reader = new FileReader();
     reader.readAsText(file);
     reader.onload = () => {

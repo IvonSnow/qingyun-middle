@@ -22,26 +22,49 @@ import moment from 'moment';
 const DescriptionItem = Descriptions.Item;
 
 // 获取文章列表数据
-const queryArticlesList = async () => {
-  const { data: res } = await axios.get('/api/blog/articles/list');
+const queryArticlesList = async ({ pageSize, pageIndex }) => {
+  const { data: res } = await axios.get('/api/blog/articles/list', {
+    params: {
+      pageSize,
+      currentPage: pageIndex,
+    },
+  });
 
-  let list = [];
-  if (res.success && isArray(res.data)) {
-    list = res.data;
-    list.forEach((article) => {
-      article.labels = article.labels ? article.labels.split(',') : [];
-    });
+  let Articelist = {
+    pagination: {},
+    list: [],
+  };
+  if (res.success && res.data) {
+    if (isArray(res.data?.list)) {
+      Articelist.list = res.data.list;
+      Articelist.list.forEach((article) => {
+        article.labels = article.labels ? article.labels.split(',') : [];
+      });
+    }
+    Articelist.pagination = res.data.pagination;
   } else {
     message.error(res.message);
   }
-  return list;
+
+  console.log(Articelist);
+  return Articelist;
 };
 
 /*
  * 文章列表
  */
 export default function ArticleList({ toEdit, toAdd }) {
-  const { data, run: updateArticlesList, error, loading } = useRequest(queryArticlesList);
+  // 当前页，和每页大小
+  const [pageSize, setpageSize] = useState(10);
+  const [pageIndex, setpageIndex] = useState(1);
+  const {
+    data: Articelist,
+    run: updateArticlesList,
+    error,
+    loading,
+  } = useRequest(async () => await queryArticlesList({ pageSize, pageIndex }), {
+    refreshDeps: [pageSize, pageIndex],
+  });
   const [detailVisible, setDetailVisible] = useState(false);
   const [current, setCurrent] = useState(undefined);
 
@@ -180,6 +203,11 @@ export default function ArticleList({ toEdit, toAdd }) {
     );
   };
 
+  const changePage = (pagination) => {
+    setpageIndex(pagination.current);
+    setpageSize(pagination.pageSize);
+  };
+
   return (
     <>
       <Card
@@ -190,7 +218,16 @@ export default function ArticleList({ toEdit, toAdd }) {
           </Button>,
         ]}
       >
-        <Table dataSource={data} columns={columns} />
+        <Table
+          dataSource={Articelist?.list}
+          columns={columns}
+          pagination={{
+            current: Articelist?.pagination?.currentPage,
+            pageSize: Articelist?.pagination?.pageSize,
+            total: Articelist?.pagination?.total,
+          }}
+          onChange={changePage}
+        />
       </Card>
 
       {/* 侧边抽屉详情 */}
