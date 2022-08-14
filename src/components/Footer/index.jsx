@@ -11,12 +11,18 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
   return (
     <DefaultFooter
-      copyright={`2022 个人所有 青云平台`}
+      copyright={`青云平台 Created by xueyunfeng`}
       links={[
         {
           key: 'github',
           title: <GithubOutlined />,
           href: 'https://github.com/IvonSnow',
+          blankTarget: true,
+        },
+        {
+          key: 'right',
+          title: '苏ICP备2022024806号-1',
+          href: 'https://beian.miit.gov.cn',
           blankTarget: true,
         },
       ]}

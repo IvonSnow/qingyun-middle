@@ -115,7 +115,11 @@ const Login = () => {
             await handleSubmitLogin(values);
           }}
         >
-          <Tabs activeKey={loginType} onChange={setLoginType}>
+          <Tabs
+            activeKey={loginType}
+            onChange={setLoginType}
+            className={`${styles.tabdefaultColor}`}
+          >
             <Tabs.TabPane
               key="account"
               tab={intl.formatMessage({
@@ -148,10 +152,7 @@ const Login = () => {
                   size: 'large',
                   prefix: <UserOutlined className={styles.prefixIcon} />,
                 }}
-                placeholder={intl.formatMessage({
-                  id: 'pages.login.username.placeholder',
-                  defaultMessage: '用户名: admin or user',
-                })}
+                placeholder={'用户名'}
                 rules={[
                   {
                     required: true,
@@ -170,10 +171,7 @@ const Login = () => {
                   size: 'large',
                   prefix: <LockOutlined className={styles.prefixIcon} />,
                 }}
-                placeholder={intl.formatMessage({
-                  id: 'pages.login.password.placeholder',
-                  defaultMessage: '密码: ant.design',
-                })}
+                placeholder={'密码'}
                 rules={[
                   {
                     required: true,
@@ -285,6 +283,7 @@ const Login = () => {
             <a
               style={{
                 float: 'right',
+                color: '#0bc3c3',
               }}
             >
               <FormattedMessage id="pages.login.forgotPassword" defaultMessage="忘记密码" />
